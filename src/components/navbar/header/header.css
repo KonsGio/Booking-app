@@ -122,6 +122,7 @@
     color: #0071c2;
     cursor: pointer;
     background-color: white;
+    border-radius: 50%;
   }
   
   .optionCounterButton:disabled {
