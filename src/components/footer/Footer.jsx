@@ -45,9 +45,7 @@ const Footer = () => {
         </ul>
       </div>
       <div className="fText">Copyright © 2022 · 
-        <button> <a href="https://www.kgio.dev"> 
-            kgio.dev
-        </a></button>
+        kgio.dev
       </div>
     </div>
   );
