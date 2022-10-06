@@ -2,17 +2,18 @@ import { faBed, faCalendarDays, faCar, faMapPin, faPerson, faPlane, faTaxi } fro
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './header.css';
 import { DateRange } from 'react-date-range';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import { SearchContext } from '../../context/SearchContext';
 
 const Header = ({type}) => {
     
 
     // Selecting dates
-    const [date, setDate] = useState([
+    const [dates, setDates] = useState([
         {
             startDate: new Date(),
             endDate: new Date(),
@@ -42,9 +43,14 @@ const Header = ({type}) => {
 
     const [destination, setDestination] = useState('');
     const navigate = useNavigate();
+
+    // Bringing data from context api
+    const {dispatch} = useContext(SearchContext);
     const handleSearch = () => {
-        navigate('/hotels', {state: {destination, date, options}});
+        dispatch({type:"NEW_SEARCH", payload:{destination,dates,options}});
+        navigate('/hotels', {state: {destination, dates, options}});
     }
+
 
   return (
     <div className='header'>
@@ -73,7 +79,7 @@ const Header = ({type}) => {
             </div>
             {type !== "list" && (
                 <>
-                    <h1 className='headerTitle'>A lifitime of discounts? It's Genius.</h1>
+                    <h1 className='headerTitle'>A lifetime of discounts? It's Genius.</h1>
                     <p className="headerDesc">
                         Get rewarded for your travels - unlock instant savings of 10% or more with free Kgio-booking account!
                     </p>
@@ -90,12 +96,12 @@ const Header = ({type}) => {
                         </div>
                         <div className="headerSearchItem">
                             <FontAwesomeIcon icon={faCalendarDays} className='headerIcon'/>
-                            <span onClick={() => setOpenDate(!openDate)} className='headerSearchText'>{`${format(date[0].startDate, "MM/dd/yyyy")} to ${format(date[0].endDate, "MM/dd/yyyy")}`}</span>
+                            <span onClick={() => setOpenDate(!openDate)} className='headerSearchText'>{`${format(dates[0].startDate, "MM/dd/yyyy")} to ${format(dates[0].endDate, "MM/dd/yyyy")}`}</span>
                             {openDate && <DateRange
                                 editableDateInputs={true}
-                                onChange={item => setDate([item.selection])}
+                                onChange={item => setDates([item.selection])}
                                 moveRangeOnFirstSelection={false}
-                                ranges={date}
+                                ranges={dates}
                                 className='date'
                                 minDate={new Date()}
                             />}
