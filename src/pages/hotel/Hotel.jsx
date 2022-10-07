@@ -11,9 +11,11 @@ import {
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 import { useContext, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import { SearchContext } from "../../context/SearchContext";
+import { AuthContext } from "../../context/AuthContext";
+import Reserve from "../../components/reserve/Reserve";
 
 const Hotel = () => {
   const location = useLocation();
@@ -52,6 +54,17 @@ const Hotel = () => {
 
     setSlideNumber(newSlideNumber)
   };
+
+  const {user} = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [openModal, setOpenModal] = useState(false);
+  const handleClick = () => {
+    if(user){
+      setOpenModal(true);
+    }else{
+      navigate("/login");
+    }
+  }
 
   return (
     <div>
@@ -122,7 +135,7 @@ const Hotel = () => {
               <h2>
                 <b>{days * data.cheapestPrice * options.room}€ </b> ({days} nights)
               </h2>
-              <button>Reserve or Book Now!</button>
+              <button onClick={handleClick}>Reserve or Book Now!</button>
             </div>
           </div>
         </div>
@@ -130,6 +143,7 @@ const Hotel = () => {
         <Footer />
       </div>
       )}
+      {openModal && <Reserve setOpen={setOpenModal} hotelId={id}/>}
     </div>
   );
 };
